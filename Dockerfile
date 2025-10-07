@@ -20,7 +20,9 @@ COPY start.sh /app/start.sh
 
 RUN chmod +x /app/start.sh
 
-# [修改] 不再需要暴露 WebDAV 端口
-# EXPOSE 8080
+# [CRITICAL FIX] 解决 EACCES 权限问题
+# 将 /app 目录及其所有内容的所有权赋予 node 用户 (UID 1000)
+# 这必须在所有文件复制完成后、容器启动前执行。
+RUN chown -R 1000:1000 /app
 
 CMD ["/app/start.sh"]
